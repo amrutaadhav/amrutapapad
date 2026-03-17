@@ -1,0 +1,117 @@
+import React, { useEffect, useState } from 'react';
+import { Row, Col, Card, Container } from 'react-bootstrap';
+import { useStore } from '../store';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import Loader from '../components/Loader';
+import Message from '../components/Message';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts';
+import { useTranslation } from 'react-i18next';
+
+const AdminDashboardScreen = () => {
+  const { t } = useTranslation();
+  const [summary, setSummary] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  const userInfo = useStore((state) => state.userInfo);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!userInfo || !userInfo.isAdmin) {
+      navigate('/login');
+      return;
+    }
+
+    const fetchSummary = async () => {
+      try {
+        setLoading(true);
+        const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
+        const { data } = await axios.get('/api/orders/summary', config);
+        setSummary(data);
+        setLoading(false);
+      } catch (err) {
+        setError(err.response?.data?.message || err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchSummary();
+  }, [userInfo, navigate]);
+
+  return (
+    <Container className="py-4">
+      <h1 className="mb-4">{t('Admin Dashboard')}</h1>
+      {loading ? (
+        <Loader />
+      ) : error ? (
+        <Message variant="danger">{error}</Message>
+      ) : (
+        <>
+          <Row className="mb-4">
+            <Col md={4} className="mb-3 mb-md-0">
+              <Card className="shadow-sm border-0 text-center text-white bg-primary h-100">
+                <Card.Body>
+                  <Card.Title>{t('Total Sales')}</Card.Title>
+                  <Card.Text className="fs-2 fw-bold">₹{summary.totalSales.toFixed(2)}</Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+            <Col md={4} className="mb-3 mb-md-0">
+              <Card className="shadow-sm border-0 text-center text-white bg-success h-100">
+                <Card.Body>
+                  <Card.Title>{t('Total Orders')}</Card.Title>
+                  <Card.Text className="fs-2 fw-bold">{summary.totalOrders}</Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+            <Col md={4}>
+              <Card className="shadow-sm border-0 text-center text-white bg-warning h-100">
+                <Card.Body>
+                  <Card.Title className="text-dark">{t('Total Users')}</Card.Title>
+                  <Card.Text className="fs-2 fw-bold text-dark">{summary.totalUsers}</Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+
+          <Card className="shadow-sm border-0 p-3">
+            <Card.Body>
+              <Card.Title className="mb-4">{t('Sales Analytics (Daily)')}</Card.Title>
+              {summary.dailyOrders.length === 0 ? (
+                <Message>{t('No Sales Data Available')}</Message>
+              ) : (
+                <div style={{ height: '300px' }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart
+                      data={summary.dailyOrders}
+                      margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="_id" />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend />
+                      <Bar dataKey="sales" fill="var(--secondary-color)" name={t('Sales (₹)')} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              )}
+            </Card.Body>
+          </Card>
+        </>
+      )}
+    </Container>
+  );
+};
+
+export default AdminDashboardScreen;
