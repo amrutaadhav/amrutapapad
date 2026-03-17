@@ -20,6 +20,7 @@ import { useTranslation } from 'react-i18next';
 const AdminDashboardScreen = () => {
   const { t } = useTranslation();
   const [summary, setSummary] = useState(null);
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -36,8 +37,14 @@ const AdminDashboardScreen = () => {
       try {
         setLoading(true);
         const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
-        const { data } = await axios.get('/api/orders/summary', config);
-        setSummary(data);
+        
+        const summaryPromise = axios.get('/api/orders/summary', config);
+        const productsPromise = axios.get('/api/products');
+        
+        const [summaryData, productsData] = await Promise.all([summaryPromise, productsPromise]);
+        
+        setSummary(summaryData.data);
+        setProducts(productsData.data);
         setLoading(false);
       } catch (err) {
         setError(err.response?.data?.message || err.message);
@@ -83,6 +90,42 @@ const AdminDashboardScreen = () => {
               </Card>
             </Col>
           </Row>
+
+          {products.filter(p => p.countInStock <= 5).length > 0 && (
+            <Card className="shadow-sm border-0 mb-4 border-start border-warning border-5">
+              <Card.Body>
+                <Card.Title className="text-warning mb-3">
+                  <i className="fas fa-exclamation-triangle me-2"></i>
+                  {t('Smart Inventory Prediction Alerts')}
+                </Card.Title>
+                <p className="text-muted">{t('The following products are running out of stock. Please restock them soon to prevent revenue loss.')}</p>
+                <div className="table-responsive">
+                  <table className="table table-hover table-sm">
+                    <thead>
+                      <tr>
+                        <th>{t('Product Name')}</th>
+                        <th>{t('Current Stock')}</th>
+                        <th>{t('Status')}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {products.filter(p => p.countInStock <= 5).map(product => (
+                        <tr key={product._id}>
+                          <td>{product.name}</td>
+                          <td className="fw-bold text-danger">{product.countInStock}</td>
+                          <td>
+                            <span className={`badge ${product.countInStock === 0 ? 'bg-danger' : 'bg-warning text-dark'}`}>
+                               {product.countInStock === 0 ? t('Out of Stock') : t('Low Stock')}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </Card.Body>
+            </Card>
+          )}
 
           <Card className="shadow-sm border-0 p-3">
             <Card.Body>

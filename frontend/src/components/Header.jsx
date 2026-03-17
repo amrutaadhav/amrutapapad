@@ -59,7 +59,7 @@ const Header = () => {
           <LinkContainer to="/">
             <Navbar.Brand className="brand-title d-flex align-items-center">
               <img
-                src="/logo.png"
+                src="/logo.jpeg"
                 alt="Amruta Papad Logo"
                 height="40"
                 className="d-inline-block align-top me-2 rounded-circle"

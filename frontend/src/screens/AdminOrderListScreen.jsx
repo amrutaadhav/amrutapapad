@@ -38,9 +38,35 @@ const AdminOrderListScreen = () => {
     }
   }, [userInfo, navigate]);
 
+  const exportToCSV = () => {
+    let csvContent = "data:text/csv;charset=utf-8,";
+    csvContent += "ID,User,Date,Total,Paid,Delivered\n";
+    
+    orders.forEach(order => {
+      const userName = order.user ? order.user.name : "Unknown User";
+      const paidStr = order.isPaid ? order.paidAt.substring(0, 10) : "No";
+      const devStr = order.isDelivered ? order.deliveredAt.substring(0, 10) : "No";
+      const row = `${order._id},"${userName}",${order.createdAt.substring(0, 10)},${order.totalPrice},${paidStr},${devStr}`;
+      csvContent += row + "\n";
+    });
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "orders_export.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <Container className="py-4">
-      <h1 className="mb-4">{t('Orders')}</h1>
+      <div className="d-flex align-items-center justify-content-between mb-4">
+        <h1 className="m-0">{t('Orders')}</h1>
+        <Button variant="outline-success" onClick={exportToCSV}>
+          {t('Export to CSV')}
+        </Button>
+      </div>
       {loading ? (
         <Loader />
       ) : error ? (
