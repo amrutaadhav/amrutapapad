@@ -18,6 +18,9 @@ const HomeScreen = () => {
   const [offerText, setOfferText] = useState('');
   const [offerIsActive, setOfferIsActive] = useState(false);
 
+  const [sortOrder, setSortOrder] = useState('default');
+  const [category, setCategory] = useState('All');
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -72,15 +75,51 @@ const HomeScreen = () => {
       )}
 
       <Container>
-        <h2 className="mb-4 text-center">{keyword ? `${t('Search Results for')} "${keyword}"` : t('Popular Papads')}</h2>
+        <div className="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4">
+          <h2 className="mb-3 mb-md-0">{keyword ? `${t('Search Results for')} "${keyword}"` : t('Popular Papads')}</h2>
+          
+          <div className="d-flex gap-3">
+            <select 
+              className="form-select form-select-sm shadow-sm" 
+              style={{ width: 'auto', minWidth: '150px' }}
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              {[...new Set(['All', ...products.map(p => p.category)])].map(cat => (
+                <option key={cat} value={cat}>{cat === 'All' ? t('All Categories') : t(cat)}</option>
+              ))}
+            </select>
+            
+            <select 
+              className="form-select form-select-sm shadow-sm" 
+              style={{ width: 'auto', minWidth: '150px' }}
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+            >
+              <option value="default">{t('Sort By: Default')}</option>
+              <option value="price-low">{t('Price: Low to High')}</option>
+              <option value="price-high">{t('Price: High to Low')}</option>
+              <option value="rating">{t('Top Rated')}</option>
+            </select>
+          </div>
+        </div>
+        
         {loading ? (
           <Loader />
         ) : error ? (
           <Message variant="danger">{error}</Message>
         ) : (
           <Row>
-            {products.map((product) => (
-              <Col key={product._id} sm={12} md={6} lg={4} xl={4}>
+            {products
+              .filter(p => category === 'All' || p.category === category)
+              .sort((a, b) => {
+                if (sortOrder === 'price-low') return a.price - b.price;
+                if (sortOrder === 'price-high') return b.price - a.price;
+                if (sortOrder === 'rating') return b.rating - a.rating;
+                return 0; // default
+              })
+              .map((product) => (
+              <Col key={product._id} sm={12} md={6} lg={4} xl={4} className="mb-4">
                 <Product product={product} />
               </Col>
             ))}

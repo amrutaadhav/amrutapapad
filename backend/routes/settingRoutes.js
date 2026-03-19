@@ -28,6 +28,9 @@ router.put('/', protect, admin, async (req, res) => {
     if (req.body.offerIsActive !== undefined) {
       settings.offerIsActive = req.body.offerIsActive;
     }
+    if (req.body.paymentQRCode !== undefined) {
+      settings.paymentQRCode = req.body.paymentQRCode;
+    }
 
     const updatedSettings = await settings.save();
     res.json(updatedSettings);

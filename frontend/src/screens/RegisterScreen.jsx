@@ -4,6 +4,7 @@ import { Form, Button, Row, Col, Container } from 'react-bootstrap';
 import axios from 'axios';
 import { useStore } from '../store';
 import { useTranslation } from 'react-i18next';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const RegisterScreen = () => {
   const { t } = useTranslation();
@@ -11,6 +12,8 @@ const RegisterScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
 
   const navigate = useNavigate();
@@ -69,24 +72,42 @@ const RegisterScreen = () => {
               ></Form.Control>
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="password">
+            <Form.Group className="mb-3" controlId="password" style={{ position: 'relative' }}>
               <Form.Label>{t('Password')}</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Enter password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              ></Form.Control>
+              <div className="d-flex align-items-center position-relative">
+                <Form.Control
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Enter password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  style={{ paddingRight: '40px' }}
+                />
+                <span 
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{ position: 'absolute', right: '10px', cursor: 'pointer', zIndex: 10, color: '#6c757d' }}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="confirmPassword">
+            <Form.Group className="mb-3" controlId="confirmPassword" style={{ position: 'relative' }}>
               <Form.Label>{t('Confirm Password')}</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Confirm password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              ></Form.Control>
+              <div className="d-flex align-items-center position-relative">
+                <Form.Control
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  placeholder="Confirm password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  style={{ paddingRight: '40px' }}
+                />
+                <span 
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  style={{ position: 'absolute', right: '10px', cursor: 'pointer', zIndex: 10, color: '#6c757d' }}
+                >
+                  {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
             </Form.Group>
 
             <Button type="submit" className="btn-primary-custom w-100">

@@ -22,9 +22,7 @@ const CartScreen = () => {
     
     cartItems.forEach((item, index) => {
       const spice = item.spiceLevel ? ` - Spice: ${item.spiceLevel}` : '';
-      const size = item.packagingSize ? ` - Size: ${item.packagingSize}` : '';
-      const sub = item.subscription ? ` - ${item.subscription}` : '';
-      message += `${index + 1}. *${item.name}*${spice}${size}${sub} - Qty: ${item.qty} - Price: ₹${item.price}%0a`;
+      message += `${index + 1}. *${item.name}*${spice} - Qty: ${item.qty} - Price: ₹${item.price}%0a`;
     });
     
     const total = cartItems.reduce((acc, item) => acc + item.qty * item.price, 0).toFixed(2);
@@ -56,9 +54,7 @@ const CartScreen = () => {
                         {t(item.name)}
                       </Link>
                       <div className="text-muted" style={{ fontSize: '12px' }}>
-                        {item.spiceLevel && <span>{t('Spice')}: {item.spiceLevel} | </span>}
-                        {item.packagingSize && <span>{t('Size')}: {item.packagingSize} | </span>}
-                        {item.subscription && <span>{t('Type')}: {item.subscription}</span>}
+                        {item.spiceLevel && <span>{t('Spice')}: {item.spiceLevel}</span>}
                       </div>
                     </Col>
                     <Col md={2}>₹{item.price}</Col>

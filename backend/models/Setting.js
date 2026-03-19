@@ -10,6 +10,10 @@ const settingSchema = mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    paymentQRCode: {
+      type: String,
+      default: '',
+    },
   },
   {
     timestamps: true,

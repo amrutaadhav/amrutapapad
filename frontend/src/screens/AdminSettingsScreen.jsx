@@ -14,6 +14,8 @@ const AdminSettingsScreen = () => {
 
   const [offerText, setOfferText] = useState('');
   const [offerIsActive, setOfferIsActive] = useState(true);
+  const [paymentQRCode, setPaymentQRCode] = useState('');
+  const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -30,6 +32,7 @@ const AdminSettingsScreen = () => {
         const { data } = await axios.get('/api/settings');
         setOfferText(data.offerText || '');
         setOfferIsActive(data.offerIsActive !== false); // default to true
+        setPaymentQRCode(data.paymentQRCode || '');
         setLoading(false);
       } catch (err) {
         setError(err.response?.data?.message || err.message);
@@ -44,7 +47,7 @@ const AdminSettingsScreen = () => {
     try {
       setLoading(true);
       const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
-      await axios.put('/api/settings', { offerText, offerIsActive }, config);
+      await axios.put('/api/settings', { offerText, offerIsActive, paymentQRCode }, config);
       setSuccess('Store Settings Updated!');
       setLoading(false);
       setTimeout(() => setSuccess(''), 3000);
@@ -80,6 +83,41 @@ const AdminSettingsScreen = () => {
             value={offerText}
             onChange={(e) => setOfferText(e.target.value)}
           ></Form.Control>
+        </Form.Group>
+
+        <Form.Group controlId="paymentQRCode" className="mb-4">
+          <Form.Label>{t('Payment QR Code (for UPI/GPay/PhonePe)')}</Form.Label>
+          <Form.Control 
+            type="text" 
+            placeholder={t('Enter image URL or upload file')} 
+            value={paymentQRCode}
+            onChange={(e) => setPaymentQRCode(e.target.value)}
+            className="mb-2"
+          ></Form.Control>
+          <Form.Control
+            type="file"
+            onChange={async (e) => {
+              const file = e.target.files[0];
+              const formData = new FormData();
+              formData.append('image', file);
+              setUploading(true);
+              try {
+                const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+                const { data } = await axios.post('/api/upload', formData, config);
+                setPaymentQRCode(data);
+                setUploading(false);
+              } catch (error) {
+                console.error(error);
+                setUploading(false);
+              }
+            }}
+          ></Form.Control>
+          {uploading && <Loader />}
+          {paymentQRCode && (
+             <div className="mt-3">
+               <img src={paymentQRCode} alt="Payment QR" style={{ height: '150px', border: '1px solid #ddd', padding: '5px' }} />
+             </div>
+          )}
         </Form.Group>
 
         <Button type="submit" variant="primary" className="btn-primary-custom">

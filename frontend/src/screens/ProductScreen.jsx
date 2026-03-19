@@ -7,6 +7,7 @@ import Message from '../components/Message';
 import axios from 'axios';
 import { useStore } from '../store';
 import { useTranslation } from 'react-i18next';
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
 
 const ProductScreen = () => {
   const { t } = useTranslation();
@@ -14,6 +15,7 @@ const ProductScreen = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [qty, setQty] = useState(1);
+  const [isLiked, setIsLiked] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
   const addToCart = useStore((state) => state.addToCart);
@@ -27,9 +29,6 @@ const ProductScreen = () => {
   const [uploading, setUploading] = useState(false);
   
   const [spiceLevel, setSpiceLevel] = useState('Medium');
-  const [packagingSize, setPackagingSize] = useState('500g');
-  const [subscription, setSubscription] = useState('One-time');
-
   
   const [pincode, setPincode] = useState('');
   const [deliveryMessage, setDeliveryMessage] = useState('');
@@ -56,14 +55,42 @@ const ProductScreen = () => {
        setVisitorCount(prev => prev + Math.floor(Math.random() * 5) - 2 || 5);
     }, 15000);
     
+    if (userInfo) {
+      const fetchWishlistStatus = async () => {
+        try {
+          const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
+          const { data } = await axios.get('/api/users/wishlist', config);
+          const isProductLiked = data.some(item => item._id === id);
+          setIsLiked(isProductLiked);
+        } catch (error) {
+          console.error('Failed to fetch wishlist status', error);
+        }
+      };
+      fetchWishlistStatus();
+    }
+    
     return () => clearInterval(interval);
-  }, [id, reviewSuccess]);
+  }, [id, reviewSuccess, userInfo]);
 
   const checkDelivery = () => {
     if (pincode.length === 6) {
       setDeliveryMessage(`✅ ${t('Express 2-day delivery available for')} ${pincode}`);
     } else {
       setDeliveryMessage(`❌ ${t('Invalid pincode')}`);
+    }
+  };
+
+  const toggleWishlistHandler = async () => {
+    if (!userInfo) {
+      navigate('/login');
+      return;
+    }
+    try {
+      const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
+      await axios.post('/api/users/wishlist', { productId: id }, config);
+      setIsLiked(!isLiked);
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -91,7 +118,7 @@ const ProductScreen = () => {
   };
 
   const addToCartHandler = () => {
-    addToCart({ ...product, qty, spiceLevel, packagingSize, subscription });
+    addToCart({ ...product, qty, spiceLevel });
     navigate('/cart');
   };
 
@@ -117,7 +144,41 @@ const ProductScreen = () => {
       ) : (
         <Row>
           <Col md={6}>
-            <Image src={product.image} alt={product.name} fluid className="rounded shadow-sm mb-3" />
+            <div className="position-relative">
+              <Image src={product.image} alt={product.name} fluid className="rounded shadow-sm mb-3 w-100" style={{ maxHeight: '500px', objectFit: 'cover' }} />
+              <Button 
+                variant="light" 
+                className="position-absolute top-0 end-0 m-3 rounded-circle shadow-sm border-0 bg-white" 
+                style={{ width: '45px', height: '45px', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10 }} 
+                onClick={toggleWishlistHandler}
+              >
+                {isLiked ? <FaHeart color="var(--primary-color)" size={22} /> : <FaRegHeart color="gray" size={22} />}
+              </Button>
+            </div>
+            
+            {product.reviews && product.reviews.length > 0 && (
+                <div className="mt-2 mb-4 p-3 bg-white rounded shadow-sm border border-secondary border-opacity-10 pb-4">
+                  <h5 className="text-secondary mb-3 d-flex align-items-center fw-bold">
+                    <span style={{ fontSize: '1.2rem', marginRight: '8px' }}>💬</span> {t('Real Customer Reviews')}
+                  </h5>
+                  <div className="d-flex gap-3 overflow-auto pb-2" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                    {product.reviews.map((review) => (
+                      <Card key={review._id} style={{ minWidth: '220px', maxWidth: '220px' }} className="border-0 shadow-sm bg-light flex-shrink-0">
+                        <Card.Body className="p-2">
+                           {review.images && review.images.length > 0 && (
+                             <Image src={review.images[0]} rounded style={{ width: '100%', height: '120px', objectFit: 'cover' }} className="mb-2" />
+                           )}
+                           <Rating value={review.rating} text="" />
+                           <strong className="d-block mt-1" style={{ fontSize: '0.9rem' }}>{review.name}</strong>
+                           <p className="text-muted" style={{ fontSize: '0.8rem', marginBottom: '5px' }}>{review.createdAt.substring(0, 10)}</p>
+                           <p style={{ fontSize: '0.85rem', marginBottom: 0, fontStyle: 'italic' }}>"{review.comment.substring(0, 60)}{review.comment.length > 60 && '...'}"</p>
+                        </Card.Body>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+            )}
+
             {product.images && product.images.length > 0 && (
               <Row className="gx-2">
                 {product.images.map((img, idx) => (
@@ -136,10 +197,10 @@ const ProductScreen = () => {
               <ListGroup.Item>
                 <Rating
                   value={product.rating}
-                  text={`${product.numReviews} reviews`}
+                  text={`${product.numReviews} customer reviews`}
                 />
               </ListGroup.Item>
-              <ListGroup.Item>{t('Price')}: ₹{product.price}</ListGroup.Item>
+              <ListGroup.Item>{t('Price')}: ₹{product.price} / kg</ListGroup.Item>
               <ListGroup.Item>{t('Description')}: {product.description}</ListGroup.Item>
             </ListGroup>
           </Col>
@@ -150,7 +211,7 @@ const ProductScreen = () => {
                   <Row>
                     <Col>{t('Price')}:</Col>
                     <Col>
-                      <strong>₹{product.price}</strong>
+                      <strong>₹{product.price} / kg</strong>
                     </Col>
                   </Row>
                 </ListGroup.Item>
@@ -201,40 +262,6 @@ const ProductScreen = () => {
                     </Col>
                   </Row>
                 </ListGroup.Item>
-
-                <ListGroup.Item>
-                  <Row>
-                    <Col>{t('Pack Size')}</Col>
-                    <Col>
-                      <Form.Control
-                        as="select"
-                        value={packagingSize}
-                        onChange={(e) => setPackagingSize(e.target.value)}
-                      >
-                        <option value="250g">250g</option>
-                        <option value="500g">500g</option>
-                        <option value="1kg">1kg</option>
-                      </Form.Control>
-                    </Col>
-                  </Row>
-                </ListGroup.Item>
-
-                 <ListGroup.Item>
-                  <Row>
-                    <Col>{t('Order Type')}</Col>
-                    <Col>
-                      <Form.Control
-                        as="select"
-                        value={subscription}
-                        onChange={(e) => setSubscription(e.target.value)}
-                      >
-                        <option value="One-time">{t('One-time')}</option>
-                        <option value="Monthly">{t('Monthly Delivery (Sub)')}</option>
-                      </Form.Control>
-                    </Col>
-                  </Row>
-                </ListGroup.Item>
-
 
                 <ListGroup.Item>
                   <Button
@@ -288,24 +315,7 @@ const ProductScreen = () => {
       
       {!loading && !error && (
         <>
-          <Row className="mt-5 bg-white p-4 shadow-sm border rounded">
-             <Col md={12}>
-               <h3 className="text-secondary mb-3">{t('Health & Nutrition Facts')}</h3>
-               <Row>
-                 <Col md={4}>
-                    <ul className="list-unstyled">
-                      <li><strong className="text-primary">{t('Calories')}:</strong> 150 per 100g</li>
-                      <li><strong className="text-primary">{t('Protein')}:</strong> 12g</li>
-                      <li><strong className="text-primary">{t('Carbohydrates')}:</strong> 25g</li>
-                    </ul>
-                 </Col>
-                 <Col md={8}>
-                    <p><strong>{t('Key Ingredients')}:</strong> Urad Dal flour, Asafoetida (Hing), Black Pepper, Cumin, Premium Sea Salt, Cold-pressed Oil.</p>
-                    <p><strong>{t('Health Benefits')}:</strong> Amruta Papad is high in protein and dietary fiber, promoting healthy digestion. Made strictly with 100% natural spices without any synthetic preservatives.</p>
-                 </Col>
-               </Row>
-             </Col>
-          </Row>
+
 
           <Row className="mt-5">
             <Col md={6}>

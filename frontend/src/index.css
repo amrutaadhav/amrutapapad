@@ -105,17 +105,92 @@ h1, h2, h3, h4, h5, h6 {
 .btn-primary-custom:hover {
   background-color: #d35400;
   color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(211, 84, 0, 0.3);
 }
 
-.footer {
-  background-color: var(--primary-color);
-  color: var(--bg-color);
-  padding: 40px 0;
-  margin-top: 50px;
+/* Elegant Footer Styling */
+.footer-elegant {
+  background: linear-gradient(135deg, #d9534f 0%, #c0392b 100%);
+  color: #ffffff;
+  padding: 30px 0 10px;
+  margin-top: 40px;
+  border-top: 4px solid var(--secondary-color);
+  box-shadow: 0 -5px 10px rgba(0,0,0,0.05);
 }
 
-.footer h5 {
-  color: var(--bg-color);
+.footer-brand {
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 15px;
+}
+
+.footer-elegant .footer-title {
+  color: #fff;
+  font-weight: 700;
+  position: relative;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+}
+
+.footer-elegant .footer-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 40px;
+  height: 3px;
+  background-color: var(--secondary-color);
+  border-radius: 2px;
+}
+
+.footer-desc {
+  line-height: 1.6;
+  color: #f8f9fa;
+  font-size: 0.9rem;
+}
+
+.footer-links ul li {
+  margin-bottom: 8px;
+  transition: transform 0.3s ease;
+}
+
+.footer-links ul li:hover {
+  transform: translateX(5px);
+}
+
+.footer-links a {
+  color: #f8f9fa;
+  transition: color 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.footer-links a:hover {
+  color: #fff;
+  text-decoration: underline !important;
+}
+
+.footer-contact p {
+  color: #f8f9fa;
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.footer-contact i {
+  color: #fff;
+  font-size: 1.2rem;
+  width: 25px;
+}
+
+.footer-bottom {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 .cart-item {
@@ -168,4 +243,19 @@ h1, h2, h3, h4, h5, h6 {
 [data-bs-theme="dark"] .modal-content {
   background-color: #1e1e1e;
   color: #ecf0f1;
+}
+
+/* Enhancements */
+.shadow-hover {
+  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.shadow-hover:hover {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  transform: translateY(-3px);
+}
+
+.form-control:focus {
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 0.25rem rgba(230, 126, 34, 0.25);
 }

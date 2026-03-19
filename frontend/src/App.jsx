@@ -16,15 +16,34 @@ import ShippingScreen from './screens/ShippingScreen';
 import PlaceOrderScreen from './screens/PlaceOrderScreen';
 import OrderScreen from './screens/OrderScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import AboutScreen from './screens/AboutScreen';
 import { useStore } from './store';
 import { useEffect } from 'react';
+import axios from 'axios';
 
 const App = () => {
   const theme = useStore((state) => state.theme);
+  const userInfo = useStore((state) => state.userInfo);
+  const setWishlist = useStore((state) => state.setWishlist);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-bs-theme', theme);
-  }, []);
+  }, [theme]);
+
+  useEffect(() => {
+    if (userInfo) {
+      const getWishlist = async () => {
+        try {
+          const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
+          const { data } = await axios.get('/api/users/wishlist', config);
+          setWishlist(data);
+        } catch (error) {
+          console.error('Error fetching wishlist', error);
+        }
+      };
+      getWishlist();
+    }
+  }, [userInfo, setWishlist]);
   return (
     <Router>
       <Header />
@@ -41,6 +60,7 @@ const App = () => {
           <Route path="/placeorder" element={<PlaceOrderScreen />} />
           <Route path="/order/:id" element={<OrderScreen />} />
           <Route path="/wishlist" element={<WishlistScreen />} />
+          <Route path="/about" element={<AboutScreen />} />
           <Route path="/admin/productlist" element={<ProductListScreen />} />
           <Route path="/admin/product/:id/edit" element={<ProductEditScreen />} />
           <Route path="/admin/dashboard" element={<AdminDashboardScreen />} />

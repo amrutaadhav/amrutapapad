@@ -14,6 +14,7 @@ const PlaceOrderScreen = () => {
   const shippingAddress = useStore((state) => state.shippingAddress);
   const userInfo = useStore((state) => state.userInfo);
   
+  const [paymentMethod, setPaymentMethod] = useState('UPI');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -26,11 +27,14 @@ const PlaceOrderScreen = () => {
     cartItems.reduce((acc, item) => acc + item.price * item.qty, 0)
   );
   
+  const discountAmount = paymentMethod !== 'Cash on Delivery' ? addDecimals(Number(itemsPrice) * 0.10) : 0; // 10% discount for online payment
+
+  
   // Free shipping above ₹500, else ₹50
   const shippingPrice = addDecimals(itemsPrice > 500 ? 0 : 50);
-  const taxPrice = addDecimals(Number((0.05 * itemsPrice).toFixed(2))); // 5% GST
+  const taxPrice = addDecimals(Number((0.05 * (itemsPrice - discountAmount)).toFixed(2))); // 5% GST
   const totalPrice = (
-    Number(itemsPrice) +
+    Number(itemsPrice) - Number(discountAmount) +
     Number(shippingPrice) +
     Number(taxPrice)
   ).toFixed(2);
@@ -59,7 +63,7 @@ const PlaceOrderScreen = () => {
         {
           orderItems: cartItems,
           shippingAddress: shippingAddress,
-          paymentMethod: 'Razorpay',
+          paymentMethod: paymentMethod,
           itemsPrice,
           shippingPrice,
           taxPrice,
@@ -93,7 +97,52 @@ const PlaceOrderScreen = () => {
 
             <ListGroup.Item>
               <h2>{t('Payment Method')}</h2>
-              <strong>Method: </strong> Razorpay / Card
+              <Form.Group>
+                <Form.Check
+                  type="radio"
+                  label="UPI"
+                  id="UPI"
+                  name="paymentMethod"
+                  value="UPI"
+                  checked={paymentMethod === 'UPI'}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                  className="mb-2"
+                />
+                <Form.Check
+                  type="radio"
+                  label="Google Pay (GPay)"
+                  id="GPay"
+                  name="paymentMethod"
+                  value="GPay"
+                  checked={paymentMethod === 'GPay'}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                  className="mb-2"
+                />
+                <Form.Check
+                  type="radio"
+                  label="PhonePe"
+                  id="PhonePe"
+                  name="paymentMethod"
+                  value="PhonePe"
+                  checked={paymentMethod === 'PhonePe'}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                  className="mb-2"
+                />
+                <Form.Check
+                  type="radio"
+                  label={t('Cash on Delivery')}
+                  id="COD"
+                  name="paymentMethod"
+                  value="Cash on Delivery"
+                  checked={paymentMethod === 'Cash on Delivery'}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                />
+              </Form.Group>
+              {paymentMethod !== 'Cash on Delivery' && (
+                <Message variant="success" className="mt-3">
+                  🔥 {t('Online payment selected! 10% discount applied automatically.')}
+                </Message>
+              )}
             </ListGroup.Item>
 
             <ListGroup.Item>
@@ -142,6 +191,14 @@ const PlaceOrderScreen = () => {
                   <Col>₹{itemsPrice}</Col>
                 </Row>
               </ListGroup.Item>
+              {discountAmount > 0 && (
+                <ListGroup.Item>
+                  <Row className="text-success fw-bold">
+                    <Col>{t('Online Discount (10%)')}</Col>
+                    <Col>- ₹{discountAmount}</Col>
+                  </Row>
+                </ListGroup.Item>
+              )}
               <ListGroup.Item>
                 <Row>
                   <Col>{t('Shipping')}</Col>

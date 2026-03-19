@@ -66,12 +66,12 @@ const Product = ({ product }) => {
         <Card.Text as="div" className="my-3">
           <Rating
             value={product.rating}
-            text={`${product.numReviews} ${t('reviews')}`}
+            text={`${product.numReviews} ${t('customer reviews')}`}
           />
         </Card.Text>
 
         <Card.Text as="h3" className="product-price">
-          ₹{product.price}
+          ₹{product.price} / kg
         </Card.Text>
       </Card.Body>
     </Card>

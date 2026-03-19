@@ -13,6 +13,7 @@ const OrderScreen = () => {
   const [order, setOrder] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [storeSettings, setStoreSettings] = useState({});
   
   // Fake Razorpay state
   const [showRazorpay, setShowRazorpay] = useState(false);
@@ -30,6 +31,14 @@ const OrderScreen = () => {
         const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
         const { data } = await axios.get(`/api/orders/${orderId}`, config);
         setOrder(data);
+        
+        try {
+           const settingsData = await axios.get('/api/settings');
+           setStoreSettings(settingsData.data);
+        } catch(e) {
+           console.error('Failed to load settings', e);
+        }
+        
         setLoading(false);
       } catch (err) {
         setError(err.response?.data?.message || err.message);
@@ -279,6 +288,14 @@ const OrderScreen = () => {
              </div>
              <div>💳</div>
           </div>
+
+           {storeSettings && storeSettings.paymentQRCode && (
+              <div className="text-center mb-4 p-3 border rounded bg-white shadow-sm">
+                 <h6 className="fw-bold">{t('Or Scan to Pay')}</h6>
+                 <img src={storeSettings.paymentQRCode} alt="Payment Scanner QR" style={{ width: '150px', height: '150px' }} className="mb-2" />
+                 <div className="text-muted" style={{ fontSize: '12px' }}>{t('Scan using GPay, PhonePe, or any UPI app')}</div>
+              </div>
+           )}
 
           <Button 
             variant="success" 
