@@ -25,11 +25,28 @@ const Footer = () => {
           <Col md={4} className="mb-4 footer-contact">
             <h5 className="footer-title">{t('Contact Us')}</h5>
             <div className="mt-3">
-              <p className="mb-2"><i className="fas fa-map-marker-alt me-3"></i>{t('123 Street, Food Valley Dt.')}</p>
-              <p className="mb-2"><i className="fas fa-envelope me-3"></i>contact:amrutagruhudyog@gmail.com</p>
-              <p className="mb-2"><i className="fas fa-phone-alt me-3"></i>+91 9270721017</p>
-              <p className="mb-2"><i className="fas fa-phone-alt me-3" style={{visibility: 'hidden'}}></i>+91 9011331017</p>
-              <p className="mb-2"><i className="fas fa-phone-alt me-3" style={{visibility: 'hidden'}}></i>+91 9960255848</p>
+              <p className="mb-2">
+                <i className="fas fa-map-marker-alt me-3"></i>
+                <a href="https://share.google/awhYgBLp9QFQUqR5b" target="_blank" rel="noreferrer" className="text-decoration-none text-muted">
+                  {t('123 Street, Food Valley Dt.')}
+                </a>
+              </p>
+              <p className="mb-2">
+                <i className="fas fa-envelope me-3"></i>
+                <a href="mailto:amrutagruhudyog@gmail.com" className="text-decoration-none text-muted">amrutagruhudyog@gmail.com</a>
+              </p>
+              <p className="mb-2">
+                <i className="fas fa-phone-alt me-3"></i>
+                <a href="tel:+919270721017" className="text-decoration-none text-muted">+91 9270721017</a>
+              </p>
+              <p className="mb-2" style={{visibility: 'hidden'}}>
+                <i className="fas fa-phone-alt me-3"></i>
+                <a href="tel:+919011331017" className="text-decoration-none text-muted">+91 9011331017</a>
+              </p>
+              <p className="mb-2" style={{visibility: 'hidden'}}>
+                <i className="fas fa-phone-alt me-3"></i>
+                <a href="tel:+919960255848" className="text-decoration-none text-muted">+91 9960255848</a>
+              </p>
             </div>
           </Col>
         </Row>

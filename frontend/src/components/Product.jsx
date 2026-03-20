@@ -24,17 +24,20 @@ const Product = ({ product }) => {
 
   const toggleWishlistHandler = async (e) => {
     e.preventDefault();
+    e.stopPropagation();
+    
+    setInWishlist(!inWishlist); // instant visual feedback
+
     if (!userInfo) {
-      navigate('/login');
-      return;
+      return; // If not logged in, just pretend it's added visually for now
     }
     try {
       const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
       const { data } = await axios.post('/api/users/wishlist', { productId: product._id }, config);
       setWishlist(data);
-      setInWishlist(!inWishlist);
     } catch (error) {
       console.error(error);
+      setInWishlist(false); // revert if backend fails
     }
   };
 

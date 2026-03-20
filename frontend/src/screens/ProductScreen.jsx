@@ -21,6 +21,7 @@ const ProductScreen = () => {
   const addToCart = useStore((state) => state.addToCart);
   const userInfo = useStore((state) => state.userInfo);
   const [rating, setRating] = useState(0);
+  const [addedMessage, setAddedMessage] = useState('');
   const [comment, setComment] = useState('');
   const [reviewLoading, setReviewLoading] = useState(false);
   const [reviewError, setReviewError] = useState('');
@@ -81,16 +82,19 @@ const ProductScreen = () => {
   };
 
   const toggleWishlistHandler = async () => {
+    setIsLiked(!isLiked); // Turn red instantly
+    
     if (!userInfo) {
-      navigate('/login');
+      // Guest mode: fake add it to store/local if necessary, or let them login later
       return;
     }
+    
     try {
       const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
       await axios.post('/api/users/wishlist', { productId: id }, config);
-      setIsLiked(!isLiked);
     } catch (err) {
       console.error(err);
+      setIsLiked(false); // revert on error
     }
   };
 
@@ -119,7 +123,8 @@ const ProductScreen = () => {
 
   const addToCartHandler = () => {
     addToCart({ ...product, qty, spiceLevel });
-    navigate('/cart');
+    setAddedMessage(`Added ${qty} ${t(product.name)} to your cart!`);
+    setTimeout(() => setAddedMessage(''), 3500);
   };
 
   const directWhatsappHandler = () => {
@@ -264,13 +269,19 @@ const ProductScreen = () => {
                 </ListGroup.Item>
 
                 <ListGroup.Item>
+                  {addedMessage && (
+                    <div className="alert alert-success py-2 mt-2 text-center" style={{ fontSize: '14px', fontWeight: 'bold' }}>
+                      {addedMessage}
+                    </div>
+                  )}
+
                   <Button
                     className="w-100 btn-primary-custom mb-3"
                     type="button"
                     disabled={product.countInStock === 0}
                     onClick={addToCartHandler}
                   >
-                    {t('Add To Cart')}
+                    {addedMessage ? t('Added to Cart!') : t('Add To Cart')}
                   </Button>
 
                   <div className="text-center text-muted mb-3" style={{ fontSize: '14px' }}>OR</div>
