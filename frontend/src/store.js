@@ -10,8 +10,13 @@ export const useStore = create((set, get) => ({
   shippingAddress: localStorage.getItem('shippingAddress')
     ? JSON.parse(localStorage.getItem('shippingAddress'))
     : {},
-  wishlist: [],
-  setWishlist: (data) => set({ wishlist: data }),
+  wishlist: localStorage.getItem('wishlist')
+    ? JSON.parse(localStorage.getItem('wishlist'))
+    : [],
+  setWishlist: (data) => {
+    localStorage.setItem('wishlist', JSON.stringify(data));
+    set({ wishlist: data });
+  },
   theme: localStorage.getItem('theme') || 'light',
   toggleTheme: () => set((state) => {
     const newTheme = state.theme === 'light' ? 'dark' : 'light';

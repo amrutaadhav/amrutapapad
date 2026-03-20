@@ -27,25 +27,25 @@ const Footer = () => {
             <div className="mt-3">
               <p className="mb-2">
                 <i className="fas fa-map-marker-alt me-3"></i>
-                <a href="https://share.google/awhYgBLp9QFQUqR5b" target="_blank" rel="noreferrer" className="text-decoration-none text-muted">
-                  {t('123 Street, Food Valley Dt.')}
+                <a href="https://share.google/awhYgBLp9QFQUqR5b" target="_blank" rel="noreferrer" className="text-decoration-none" style={{ color: '#007bff' }}>
+                  {t('Amruta Papad udyog,Pothare,tel.Karmala,Dist.Solapur.')}
                 </a>
               </p>
               <p className="mb-2">
                 <i className="fas fa-envelope me-3"></i>
-                <a href="mailto:amrutagruhudyog@gmail.com" className="text-decoration-none text-muted">amrutagruhudyog@gmail.com</a>
+                <a href="mailto:amrutagruhudyog@gmail.com" className="text-decoration-none" style={{ color: '#007bff' }}>amrutagruhudyog@gmail.com</a>
               </p>
               <p className="mb-2">
                 <i className="fas fa-phone-alt me-3"></i>
-                <a href="tel:+919270721017" className="text-decoration-none text-muted">+91 9270721017</a>
+                <a href="tel:+919270721017" className="text-decoration-none" style={{ color: '#007bff' }}>+91 9270721017</a>
               </p>
-              <p className="mb-2" style={{visibility: 'hidden'}}>
+              <p className="mb-2" >
                 <i className="fas fa-phone-alt me-3"></i>
-                <a href="tel:+919011331017" className="text-decoration-none text-muted">+91 9011331017</a>
+                <a href="tel:+919011331017" className="text-decoration-none" style={{ color: '#007bff' }}>+91 9011331017</a>
               </p>
-              <p className="mb-2" style={{visibility: 'hidden'}}>
+              <p className="mb-2" >
                 <i className="fas fa-phone-alt me-3"></i>
-                <a href="tel:+919960255848" className="text-decoration-none text-muted">+91 9960255848</a>
+                <a href="tel:+919960255848" className="text-decoration-none" style={{ color: '#007bff' }}>+91 9960255848</a>
               </p>
             </div>
           </Col>
