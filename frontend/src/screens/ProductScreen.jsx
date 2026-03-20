@@ -68,6 +68,9 @@ const ProductScreen = () => {
         }
       };
       fetchWishlistStatus();
+    } else {
+      const isProductLiked = wishlist.some(item => item._id === id);
+      setIsLiked(isProductLiked);
     }
     
     return () => clearInterval(interval);
@@ -81,11 +84,19 @@ const ProductScreen = () => {
     }
   };
 
+  const wishlist = useStore((state) => state.wishlist);
+  const setWishlist = useStore((state) => state.setWishlist);
+
   const toggleWishlistHandler = async () => {
-    setIsLiked(!isLiked); // Turn red instantly
+    const isNowWishlisted = !isLiked;
+    setIsLiked(isNowWishlisted); // Turn red/white instantly
     
     if (!userInfo) {
-      // Guest mode: fake add it to store/local if necessary, or let them login later
+      if (isNowWishlisted) {
+        setWishlist([...wishlist, product]);
+      } else {
+        setWishlist(wishlist.filter(item => item._id !== id));
+      }
       return;
     }
     

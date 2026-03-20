@@ -26,9 +26,15 @@ const Product = ({ product }) => {
     e.preventDefault();
     e.stopPropagation();
     
-    setInWishlist(!inWishlist); // instant visual feedback
+    const isNowWishlisted = !inWishlist;
+    setInWishlist(isNowWishlisted); // instant visual feedback
 
     if (!userInfo) {
+      if (isNowWishlisted) {
+        setWishlist([...wishlist, product]);
+      } else {
+        setWishlist(wishlist.filter(item => item._id !== product._id));
+      }
       return; // If not logged in, just pretend it's added visually for now
     }
     try {
