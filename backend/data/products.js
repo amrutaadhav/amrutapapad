@@ -1,7 +1,7 @@
 const products = [
   {
     name: 'Udid Papad',
-    image: 'https://res.cloudinary.com/dukzvvjrl/image/upload/v1773975245/amrutapapad_uploads/b6ezeqqjwo6gkmabml56.jpg',
+    image: 'https://res.cloudinary.com/dukzvvjrl/image/upload/q_auto,f_auto/v1773975245/amrutapapad_uploads/b6ezeqqjwo6gkmabml56.jpg',
     description: 'Classic crunchy Udad Papad, perfect accompaniment for Indian meals. Made with premium quality udad dal and traditional spices. (Price is per 1kg).',
     category: 'Papad',
     price: 340,
@@ -11,7 +11,7 @@ const products = [
   },
   {
     name: 'Jeera Papad',
-    image: 'https://res.cloudinary.com/dukzvvjrl/image/upload/v1773975232/amrutapapad_uploads/rxyuh6hhjs0wnknjhgf5.jpg',
+    image: 'https://res.cloudinary.com/dukzvvjrl/image/upload/q_auto,f_auto/v1773975232/amrutapapad_uploads/rxyuh6hhjs0wnknjhgf5.jpg',
     description: 'Refreshing Jeera (Cumin) flavored papad perfect for digestion after a heavy meal. (Price is per 1kg).',
     category: 'Papad',
     price: 360,
@@ -21,7 +21,7 @@ const products = [
   },
   {
     name: 'Jowar Papad',
-    image: 'https://res.cloudinary.com/dukzvvjrl/image/upload/v1773975233/amrutapapad_uploads/owrnqc0oezzy6f8dgyxu.jpg',
+    image: 'https://res.cloudinary.com/dukzvvjrl/image/upload/q_auto,f_auto/v1773975233/amrutapapad_uploads/owrnqc0oezzy6f8dgyxu.jpg',
     description: 'Healthy Jowar (Sorghum) papad. A gluten-free and highly nutritious choice. (Price is per 1kg).',
     category: 'Papad',
     price: 380,
@@ -31,7 +31,7 @@ const products = [
   },
   {
     name: 'Red Chilli (Lal Mirchi) Papad',
-    image: 'https://res.cloudinary.com/dukzvvjrl/image/upload/v1773975235/amrutapapad_uploads/qrsngt0jkiqgnwmyvari.jpg',
+    image: 'https://res.cloudinary.com/dukzvvjrl/image/upload/q_auto,f_auto/v1773975235/amrutapapad_uploads/qrsngt0jkiqgnwmyvari.jpg',
     description: 'Extra fiery Red Chilli papad. Not for the faint-hearted! (Price is per 1kg).',
     category: 'Papad',
     price: 350,
@@ -41,7 +41,7 @@ const products = [
   },
   {
     name: 'Ragi (Nachani) Papad',
-    image: 'https://res.cloudinary.com/dukzvvjrl/image/upload/v1773975239/amrutapapad_uploads/lgjica3jxfpwtu6hnb7d.jpg',
+    image: 'https://res.cloudinary.com/dukzvvjrl/image/upload/q_auto,f_auto/v1773975239/amrutapapad_uploads/lgjica3jxfpwtu6hnb7d.jpg',
     description: 'Highly nutritious Finger Millet papad. Packed with calcium and iron. (Price is per 1kg).',
     category: 'Papad',
     price: 375,
@@ -51,7 +51,7 @@ const products = [
   },
   {
     name: 'Spinach (Palak) Papad',
-    image: 'https://res.cloudinary.com/dukzvvjrl/image/upload/v1773975241/amrutapapad_uploads/sc5fff6aede3k0t1dnk2.jpg',
+    image: 'https://res.cloudinary.com/dukzvvjrl/image/upload/q_auto,f_auto/v1773975241/amrutapapad_uploads/sc5fff6aede3k0t1dnk2.jpg',
     description: 'Delicious and healthy Spinach papad giving a vibrant green touch to your plate. (Price is per 1kg).',
     category: 'Papad',
     price: 390,
@@ -61,7 +61,7 @@ const products = [
   },
   {
     name: 'Tomato Papad',
-    image: 'https://res.cloudinary.com/dukzvvjrl/image/upload/v1773975243/amrutapapad_uploads/ixorwywslmrgncaabfpo.jpg',
+    image: 'https://res.cloudinary.com/dukzvvjrl/image/upload/q_auto,f_auto/v1773975243/amrutapapad_uploads/ixorwywslmrgncaabfpo.jpg',
     description: 'Tangy and flavorful tomato papad. A favorite among children! (Price is per 1kg).',
     category: 'Papad',
     price: 360,
@@ -71,7 +71,7 @@ const products = [
   },
   {
     name: 'Green Chilli Garlic Papad',
-    image: 'https://res.cloudinary.com/dukzvvjrl/image/upload/v1773975244/amrutapapad_uploads/inj3vmt7nhluu0eako8t.jpg',
+    image: 'https://res.cloudinary.com/dukzvvjrl/image/upload/q_auto,f_auto/v1773975244/amrutapapad_uploads/inj3vmt7nhluu0eako8t.jpg',
     description: 'Pungent blend of green chillies and garlic perfectly infused into Udad papad. (Price is per 1kg).',
     category: 'Papad',
     price: 370,
