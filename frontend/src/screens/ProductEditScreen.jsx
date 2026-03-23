@@ -14,6 +14,7 @@ const ProductEditScreen = () => {
 
   const [name, setName] = useState('');
   const [price, setPrice] = useState(0);
+  const [originalPrice, setOriginalPrice] = useState(0);
   const [image, setImage] = useState('');
   const [images, setImages] = useState([]);
   const [uploading, setUploading] = useState(false);
@@ -38,6 +39,7 @@ const ProductEditScreen = () => {
         const { data } = await axios.get(`/api/products/${id}`);
         setName(data.name);
         setPrice(data.price);
+        setOriginalPrice(data.originalPrice || 0);
         setImage(data.image);
         setImages(data.images || []);
         setCategory(data.category);
@@ -65,7 +67,7 @@ const ProductEditScreen = () => {
 
       await axios.put(
         `/api/products/${id}`,
-        { name, price, image, images, category, countInStock, description },
+        { name, price, originalPrice, image, images, category, countInStock, description },
         config
       );
       setLoading(false);
@@ -105,6 +107,16 @@ const ProductEditScreen = () => {
               placeholder={t('Enter price')}
               value={price}
               onChange={(e) => setPrice(e.target.value)}
+            ></Form.Control>
+          </Form.Group>
+
+          <Form.Group controlId="originalPrice" className="mb-3">
+            <Form.Label>{t('Original Price (₹)')}</Form.Label>
+            <Form.Control
+              type="number"
+              placeholder={t('Enter original price (e.g. higher price for strike-through)')}
+              value={originalPrice}
+              onChange={(e) => setOriginalPrice(e.target.value)}
             ></Form.Control>
           </Form.Group>
 

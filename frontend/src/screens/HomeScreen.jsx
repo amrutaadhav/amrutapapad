@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Container } from 'react-bootstrap';
+import { Row, Col, Container, Carousel } from 'react-bootstrap';
 import Product from '../components/Product';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import { Alert } from 'react-bootstrap';
 
 const HomeScreen = () => {
@@ -19,7 +19,14 @@ const HomeScreen = () => {
   const [offerIsActive, setOfferIsActive] = useState(false);
 
   const [sortOrder, setSortOrder] = useState('default');
-  const [category, setCategory] = useState('All');
+  const location = useLocation();
+  const [category, setCategory] = useState(location.state?.category || 'All');
+
+  useEffect(() => {
+    if (location.state?.category) {
+      setCategory(location.state.category);
+    }
+  }, [location.state]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -60,6 +67,36 @@ const HomeScreen = () => {
               <p>{t('Authentic Maharashtrian Taste')}</p>
             </Container>
           </div>
+          
+          {/* New Cloudinary Sliding Image Gallery */}
+          {(!loading || loading) && (
+            <Container className="mb-5 mt-4 px-0 px-md-3">
+              <h2 className="text-center mb-4" style={{ fontWeight: '700', color: 'var(--primary-color)' }}>
+                {t('Our Gallery')}
+              </h2>
+              <div className="custom-gallery-container">
+                <Carousel fade interval={2000} indicators={true} pause="hover">
+                  {[
+                    "https://res.cloudinary.com/dukzvvjrl/image/upload/v1774286210/1_y8pfs5.jpg",
+                    "https://res.cloudinary.com/dukzvvjrl/image/upload/v1774286210/2_auxyyj.jpg",
+                    "https://res.cloudinary.com/dukzvvjrl/image/upload/v1774286222/3_afegrp.jpg",
+                    "https://res.cloudinary.com/dukzvvjrl/image/upload/v1774286220/4_ckrqkd.jpg",
+                    "https://res.cloudinary.com/dukzvvjrl/image/upload/v1774286223/5_vyj9x7.jpg",
+                    "https://res.cloudinary.com/dukzvvjrl/image/upload/v1774286208/6_ymx90e.jpg"
+                  ].map((imageUrl, idx) => (
+                    <Carousel.Item key={idx} className="custom-gallery-item">
+                      <img
+                        className="d-block custom-gallery-img"
+                        src={imageUrl}
+                        alt={`Gallery Image ${idx + 1}`}
+                      />
+                    </Carousel.Item>
+                  ))}
+                </Carousel>
+              </div>
+            </Container>
+          )}
+
           {offerIsActive && offerText && (
             <Container className="mb-4">
               <Alert variant="warning" className="text-center shadow-sm" style={{ borderLeft: '5px solid #e67e22', backgroundColor: '#fff3cd', color: '#856404' }}>
@@ -119,7 +156,7 @@ const HomeScreen = () => {
                 return 0; // default
               })
               .map((product) => (
-              <Col key={product._id} sm={12} md={6} lg={4} xl={4} className="mb-4">
+              <Col key={product._id} xs={6} sm={6} md={6} lg={4} xl={4} className="mb-4">
                 <Product product={product} />
               </Col>
             ))}

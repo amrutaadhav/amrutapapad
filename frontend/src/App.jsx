@@ -22,6 +22,7 @@ const AdminOrderListScreen = lazy(() => import('./screens/AdminOrderListScreen')
 const ShippingScreen = lazy(() => import('./screens/ShippingScreen'));
 const PlaceOrderScreen = lazy(() => import('./screens/PlaceOrderScreen'));
 const OrderScreen = lazy(() => import('./screens/OrderScreen'));
+const CategoryScreen = lazy(() => import('./screens/CategoryScreen'));
 const ProfileScreen = lazy(() => import('./screens/ProfileScreen'));
 const AboutScreen = lazy(() => import('./screens/AboutScreen'));
 
@@ -57,6 +58,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<HomeScreen />} />
             <Route path="/search/:keyword" element={<HomeScreen />} />
+            <Route path="/categories" element={<CategoryScreen />} />
             <Route path="/product/:id" element={<ProductScreen />} />
             <Route path="/cart" element={<CartScreen />} />
             <Route path="/login" element={<LoginScreen />} />

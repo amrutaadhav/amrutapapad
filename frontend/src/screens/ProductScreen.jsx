@@ -216,7 +216,15 @@ const ProductScreen = () => {
                   text={`${product.numReviews} customer reviews`}
                 />
               </ListGroup.Item>
-              <ListGroup.Item>{t('Price')}: ₹{product.price} / kg</ListGroup.Item>
+              <ListGroup.Item>
+                {t('Price')}:{' '}
+                {product.originalPrice > product.price && (
+                  <span className="text-muted text-decoration-line-through me-2" style={{ fontSize: '1.2rem' }}>
+                    ₹{product.originalPrice}
+                  </span>
+                )}
+                ₹{product.price} / kg
+              </ListGroup.Item>
               <ListGroup.Item>{t('Description')}: {product.description}</ListGroup.Item>
             </ListGroup>
           </Col>
@@ -227,6 +235,11 @@ const ProductScreen = () => {
                   <Row>
                     <Col>{t('Price')}:</Col>
                     <Col>
+                      {product.originalPrice > product.price && (
+                        <span className="text-muted text-decoration-line-through me-2" style={{ fontSize: '1rem', fontWeight: 'normal' }}>
+                          ₹{product.originalPrice}
+                        </span>
+                      )}
                       <strong>₹{product.price} / kg</strong>
                     </Col>
                   </Row>

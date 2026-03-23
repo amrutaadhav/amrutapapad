@@ -48,39 +48,45 @@ const Product = ({ product }) => {
   };
 
   return (
-    <Card className="my-3 p-3 rounded product-card position-relative">
+    <Card className="my-2 my-sm-3 p-2 p-sm-3 rounded product-card position-relative h-100 d-flex flex-column">
       <Button 
         variant="light" 
         className="position-absolute rounded-circle shadow-sm" 
-        style={{ top: '15px', right: '15px', zIndex: 10, padding: '8px' }}
+        style={{ top: '10px', right: '10px', zIndex: 10, padding: '5px' }}
         onClick={toggleWishlistHandler}
       >
-        {inWishlist ? <FaHeart color="red" size={20} /> : <FaRegHeart color="gray" size={20} />}
+        {inWishlist ? <FaHeart color="red" size={16} /> : <FaRegHeart color="gray" size={16} />}
       </Button>
       <Link to={`/product/${product._id}`}>
-        <Card.Img src={product.image} variant="top" />
+        <Card.Img src={product.image} variant="top" className="rounded" />
       </Link>
 
-      <Card.Body>
+      <Card.Body className="d-flex flex-column p-2 p-sm-3">
         <Link to={`/product/${product._id}`} className="text-decoration-none">
-          <Card.Title as="div" className="product-title">
+          <Card.Title as="div" className="product-title" style={{ fontSize: '1.1rem', minHeight: '2.5rem' }}>
             <strong>{t(product.name)}</strong>
           </Card.Title>
         </Link>
         
-        <Card.Text as="div" className="mt-2 text-muted">
+        <Card.Text as="div" className="mt-2 text-muted d-none d-sm-block flex-grow-1">
           {product.description.substring(0, 50)}...
         </Card.Text>
 
-        <Card.Text as="div" className="my-3">
+        <Card.Text as="div" className="my-1 my-sm-3" style={{ fontSize: '0.9rem' }}>
           <Rating
             value={product.rating}
-            text={`${product.numReviews} ${t('customer reviews')}`}
+            text={<span className="d-none d-sm-inline">{`${product.numReviews} ${t('reviews')}`}</span>}
           />
         </Card.Text>
 
-        <Card.Text as="h3" className="product-price">
-          ₹{product.price} / kg
+        <Card.Text as="div" className="product-price mt-auto" style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>
+          {product.originalPrice > product.price && (
+             <span className="text-muted text-decoration-line-through me-1" style={{ fontSize: '0.85rem', fontWeight: 'normal' }}>
+               ₹{product.originalPrice}
+             </span>
+          )}
+          <br className="d-block d-sm-none" />
+          ₹{product.price} <span style={{ fontSize: '0.85rem', fontWeight: 'normal' }}>/ kg</span>
         </Card.Text>
       </Card.Body>
     </Card>
