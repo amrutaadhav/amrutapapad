@@ -18,6 +18,7 @@ const ProductEditScreen = () => {
   const [image, setImage] = useState('');
   const [images, setImages] = useState([]);
   const [uploading, setUploading] = useState(false);
+  const [uploadingPrimary, setUploadingPrimary] = useState(false);
   const [category, setCategory] = useState('');
   const [countInStock, setCountInStock] = useState(0);
   const [description, setDescription] = useState('');
@@ -106,7 +107,12 @@ const ProductEditScreen = () => {
               type="number"
               placeholder={t('Enter price')}
               value={price}
-              onChange={(e) => setPrice(e.target.value)}
+              onChange={(e) => {
+                const newPrice = Number(e.target.value);
+                setPrice(newPrice);
+                // Automatically generate a 25% higher 'cut line' original price
+                setOriginalPrice(Math.round(newPrice * 1.25));
+              }}
             ></Form.Control>
           </Form.Group>
 
@@ -128,6 +134,25 @@ const ProductEditScreen = () => {
               value={image}
               onChange={(e) => setImage(e.target.value)}
             ></Form.Control>
+            <Form.Control
+              type="file"
+              onChange={async (e) => {
+                const file = e.target.files[0];
+                const formData = new FormData();
+                formData.append('image', file);
+                setUploadingPrimary(true);
+                try {
+                  const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+                  const { data } = await axios.post('/api/upload', formData, config);
+                  setImage(data); // natively returns the secure Cloudinary string
+                  setUploadingPrimary(false);
+                } catch (error) {
+                  console.error(error);
+                  setUploadingPrimary(false);
+                }
+              }}
+            ></Form.Control>
+            {uploadingPrimary && <Loader />}
           </Form.Group>
 
           <Form.Group controlId="image-file" className="mb-3">
