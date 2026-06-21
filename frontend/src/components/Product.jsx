@@ -80,11 +80,9 @@ const Product = ({ product }) => {
         </Card.Text>
 
         <Card.Text as="div" className="product-price mt-auto" style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>
-          {product.originalPrice > product.price && (
-             <span className="text-muted text-decoration-line-through me-1" style={{ fontSize: '0.85rem', fontWeight: 'normal' }}>
-               ₹{product.originalPrice}
-             </span>
-          )}
+          <span className="text-muted text-decoration-line-through me-1" style={{ fontSize: '0.85rem', fontWeight: 'normal' }}>
+            ₹{product.originalPrice && product.originalPrice > product.price ? product.originalPrice : Math.round(product.price * 1.25)}
+          </span>
           <br className="d-block d-sm-none" />
           ₹{product.price} <span style={{ fontSize: '0.85rem', fontWeight: 'normal' }}>/ kg</span>
         </Card.Text>

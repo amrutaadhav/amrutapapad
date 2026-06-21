@@ -218,11 +218,9 @@ const ProductScreen = () => {
               </ListGroup.Item>
               <ListGroup.Item>
                 {t('Price')}:{' '}
-                {product.originalPrice > product.price && (
-                  <span className="text-muted text-decoration-line-through me-2" style={{ fontSize: '1.2rem' }}>
-                    ₹{product.originalPrice}
-                  </span>
-                )}
+                <span className="text-muted text-decoration-line-through me-2" style={{ fontSize: '1.2rem' }}>
+                  ₹{product.originalPrice && product.originalPrice > product.price ? product.originalPrice : Math.round(product.price * 1.25)}
+                </span>
                 ₹{product.price} / kg
               </ListGroup.Item>
               <ListGroup.Item>{t('Description')}: {product.description}</ListGroup.Item>
@@ -235,11 +233,9 @@ const ProductScreen = () => {
                   <Row>
                     <Col>{t('Price')}:</Col>
                     <Col>
-                      {product.originalPrice > product.price && (
-                        <span className="text-muted text-decoration-line-through me-2" style={{ fontSize: '1rem', fontWeight: 'normal' }}>
-                          ₹{product.originalPrice}
-                        </span>
-                      )}
+                      <span className="text-muted text-decoration-line-through me-2" style={{ fontSize: '1rem', fontWeight: 'normal' }}>
+                        ₹{product.originalPrice && product.originalPrice > product.price ? product.originalPrice : Math.round(product.price * 1.25)}
+                      </span>
                       <strong>₹{product.price} / kg</strong>
                     </Col>
                   </Row>

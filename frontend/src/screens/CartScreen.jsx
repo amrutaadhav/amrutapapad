@@ -57,7 +57,12 @@ const CartScreen = () => {
                         {item.spiceLevel && <span>{t('Spice')}: {item.spiceLevel}</span>}
                       </div>
                     </Col>
-                    <Col md={2}>₹{item.price}</Col>
+                    <Col md={2}>
+                      <span className="text-muted text-decoration-line-through me-2" style={{ fontSize: '0.85rem' }}>
+                        ₹{item.originalPrice && item.originalPrice > item.price ? item.originalPrice : Math.round(item.price * 1.25)}
+                      </span>
+                      ₹{item.price}
+                    </Col>
                     <Col md={2}>
                       <Form.Control
                         as="select"
